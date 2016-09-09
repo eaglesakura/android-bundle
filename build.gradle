@@ -83,7 +83,7 @@ dependencies {
         testCompile 'com.eaglesakura:simple-utils:1.+'
         testCompile 'com.eaglesakura:android-simple-utils:1.+'
 
-        androidTestCompile 'com.eaglesakura:android-devicetest-support:1.+'
+        androidTestCompile 'com.eaglesakura:android-devicetest-support:2.+'
         testCompile 'com.eaglesakura:android-unittest-support:1.+'
     }
 
