@@ -9,9 +9,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 public class LightSaverTest extends UnitTestCase {
 
     @Test
@@ -40,6 +37,32 @@ public class LightSaverTest extends UnitTestCase {
         Value2,
         Value3,
         Value4,
+    }
+
+    public static class Pojo {
+        public String stringValue = RandomUtil.randShortString();
+
+        public Long longValue = System.currentTimeMillis();
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Pojo pojo = (Pojo) o;
+
+            if (stringValue != null ? !stringValue.equals(pojo.stringValue) : pojo.stringValue != null)
+                return false;
+            return longValue != null ? longValue.equals(pojo.longValue) : pojo.longValue == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = stringValue != null ? stringValue.hashCode() : 0;
+            result = 31 * result + (longValue != null ? longValue.hashCode() : 0);
+            return result;
+        }
     }
 
     static class SampleObject {
@@ -127,6 +150,12 @@ public class LightSaverTest extends UnitTestCase {
         @BundleState
         EnumValue mNullEnumValue;
 
+        @BundleState(json = true)
+        Pojo mPojo = new Pojo();
+
+        @BundleState(json = true)
+        Pojo mNullPojo = null;
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -170,7 +199,9 @@ public class LightSaverTest extends UnitTestCase {
             if (mNullIntegerArrayList != null ? !mNullIntegerArrayList.equals(that.mNullIntegerArrayList) : that.mNullIntegerArrayList != null)
                 return false;
             if (mEnumValue != that.mEnumValue) return false;
-            return mNullEnumValue == that.mNullEnumValue;
+            if (mNullEnumValue != that.mNullEnumValue) return false;
+            if (mPojo != null ? !mPojo.equals(that.mPojo) : that.mPojo != null) return false;
+            return mNullPojo != null ? mNullPojo.equals(that.mNullPojo) : that.mNullPojo == null;
 
         }
 
@@ -209,6 +240,8 @@ public class LightSaverTest extends UnitTestCase {
             result = 31 * result + (mNullIntegerArrayList != null ? mNullIntegerArrayList.hashCode() : 0);
             result = 31 * result + (mEnumValue != null ? mEnumValue.hashCode() : 0);
             result = 31 * result + (mNullEnumValue != null ? mNullEnumValue.hashCode() : 0);
+            result = 31 * result + (mPojo != null ? mPojo.hashCode() : 0);
+            result = 31 * result + (mNullPojo != null ? mNullPojo.hashCode() : 0);
             return result;
         }
     }

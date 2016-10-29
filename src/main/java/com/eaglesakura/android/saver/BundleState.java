@@ -11,4 +11,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface BundleState {
+
+    /**
+     * JSON化して保存する場合はtrue
+     *
+     * 互換性が保証できる場合に使用する。
+     */
+    boolean json() default false;
 }
