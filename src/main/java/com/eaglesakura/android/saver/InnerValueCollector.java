@@ -17,13 +17,13 @@ class InnerValueCollector implements Collector {
                     .target(value)
                     .save();
 
-            state.putParcelable(key, newBundle);
+            state.putBundle(key, newBundle);
         }
     }
 
     @Override
     public void onRestoreInstance(Bundle state, String key, Object dstObject, Field dstField) throws Throwable {
-        Bundle innerValues = state.getParcelable(key);
+        Bundle innerValues = state.getBundle(key);
         if (innerValues != null) {
             Object obj = dstField.get(dstObject);
             if (obj == null) {
