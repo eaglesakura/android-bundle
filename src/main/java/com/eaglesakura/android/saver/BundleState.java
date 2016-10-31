@@ -1,5 +1,7 @@
 package com.eaglesakura.android.saver;
 
+import android.support.annotation.NonNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,9 +15,16 @@ import java.lang.annotation.Target;
 public @interface BundleState {
 
     /**
-     * JSON化して保存する場合はtrue
-     *
-     * 互換性が保証できる場合に使用する。
+     * デフォルト挙動を行う際のタイプを指定する
      */
-    boolean json() default false;
+    @NonNull
+    SaveType value() default SaveType.Default;
+
+    /**
+     * Bundle制御クラスを取得する
+     *
+     * Collector.class以外を返したとき、そのクラスを優先して利用する
+     */
+    @NonNull
+    Class<? extends Collector> collector() default Collector.class;
 }

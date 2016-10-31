@@ -19,6 +19,8 @@ public class LightSaverTest extends UnitTestCase {
             SampleObject saveTarget = new SampleObject();
             SampleObject restoreTarget = new SampleObject();
 
+            InnerValue saveTargetInner = saveTarget.mValue;
+
             assertNotEquals(saveTarget, restoreTarget);
 
             LightSaver.create(state)
@@ -28,6 +30,10 @@ public class LightSaverTest extends UnitTestCase {
                     .target(restoreTarget).restore();
 
             assertEquals(saveTarget, restoreTarget);
+
+            // インスタンスの同一性が保たれている
+            assertTrue(saveTarget.mValue == saveTargetInner);
+            assertTrue(restoreTarget.mValue != saveTargetInner);
         }
     }
 
@@ -37,6 +43,34 @@ public class LightSaverTest extends UnitTestCase {
         Value2,
         Value3,
         Value4,
+    }
+
+    public static class InnerValue {
+        @BundleState
+        String mString = RandomUtil.randString();
+
+        @BundleState
+        String mNullString = null;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            InnerValue that = (InnerValue) o;
+
+            if (mString != null ? !mString.equals(that.mString) : that.mString != null)
+                return false;
+            return mNullString != null ? mNullString.equals(that.mNullString) : that.mNullString == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = mString != null ? mString.hashCode() : 0;
+            result = 31 * result + (mNullString != null ? mNullString.hashCode() : 0);
+            return result;
+        }
     }
 
     public static class Pojo {
@@ -84,7 +118,7 @@ public class LightSaverTest extends UnitTestCase {
         String mString = RandomUtil.randShortString();
 
         @BundleState
-        boolean[] mBooleenArray = {RandomUtil.randBool(), RandomUtil.randBool(), RandomUtil.randBool()};
+        boolean[] mBooleanArray = {RandomUtil.randBool(), RandomUtil.randBool(), RandomUtil.randBool()};
 
         @BundleState
         boolean[] mNullBooleanArray;
@@ -150,11 +184,20 @@ public class LightSaverTest extends UnitTestCase {
         @BundleState
         EnumValue mNullEnumValue;
 
-        @BundleState(json = true)
+        @BundleState(SaveType.Json)
         Pojo mPojo = new Pojo();
 
-        @BundleState(json = true)
+        @BundleState(SaveType.Json)
         Pojo mNullPojo = null;
+
+        @BundleState(SaveType.InnerValues)
+        final InnerValue mFinalValue = new InnerValue();
+
+        @BundleState(SaveType.InnerValues)
+        InnerValue mValue = new InnerValue();
+
+        @BundleState(SaveType.InnerValues)
+        final InnerValue mNullValue = null;
 
         @Override
         public boolean equals(Object o) {
@@ -172,7 +215,7 @@ public class LightSaverTest extends UnitTestCase {
             if (Double.compare(that.mDouble, mDouble) != 0) return false;
             if (mString != null ? !mString.equals(that.mString) : that.mString != null)
                 return false;
-            if (!Arrays.equals(mBooleenArray, that.mBooleenArray)) return false;
+            if (!Arrays.equals(mBooleanArray, that.mBooleanArray)) return false;
             if (!Arrays.equals(mNullBooleanArray, that.mNullBooleanArray)) return false;
             if (!Arrays.equals(mBytes, that.mBytes)) return false;
             if (!Arrays.equals(mNullByteArray, that.mNullByteArray)) return false;
@@ -201,7 +244,12 @@ public class LightSaverTest extends UnitTestCase {
             if (mEnumValue != that.mEnumValue) return false;
             if (mNullEnumValue != that.mNullEnumValue) return false;
             if (mPojo != null ? !mPojo.equals(that.mPojo) : that.mPojo != null) return false;
-            return mNullPojo != null ? mNullPojo.equals(that.mNullPojo) : that.mNullPojo == null;
+            if (mNullPojo != null ? !mNullPojo.equals(that.mNullPojo) : that.mNullPojo != null)
+                return false;
+            if (mFinalValue != null ? !mFinalValue.equals(that.mFinalValue) : that.mFinalValue != null)
+                return false;
+            if (mValue != null ? !mValue.equals(that.mValue) : that.mValue != null) return false;
+            return mNullValue != null ? mNullValue.equals(that.mNullValue) : that.mNullValue == null;
 
         }
 
@@ -218,7 +266,7 @@ public class LightSaverTest extends UnitTestCase {
             temp = Double.doubleToLongBits(mDouble);
             result = 31 * result + (int) (temp ^ (temp >>> 32));
             result = 31 * result + (mString != null ? mString.hashCode() : 0);
-            result = 31 * result + Arrays.hashCode(mBooleenArray);
+            result = 31 * result + Arrays.hashCode(mBooleanArray);
             result = 31 * result + Arrays.hashCode(mNullBooleanArray);
             result = 31 * result + Arrays.hashCode(mBytes);
             result = 31 * result + Arrays.hashCode(mNullByteArray);
@@ -242,6 +290,9 @@ public class LightSaverTest extends UnitTestCase {
             result = 31 * result + (mNullEnumValue != null ? mNullEnumValue.hashCode() : 0);
             result = 31 * result + (mPojo != null ? mPojo.hashCode() : 0);
             result = 31 * result + (mNullPojo != null ? mNullPojo.hashCode() : 0);
+            result = 31 * result + (mFinalValue != null ? mFinalValue.hashCode() : 0);
+            result = 31 * result + (mValue != null ? mValue.hashCode() : 0);
+            result = 31 * result + (mNullValue != null ? mNullValue.hashCode() : 0);
             return result;
         }
     }

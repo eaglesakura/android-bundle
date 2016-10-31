@@ -26,4 +26,10 @@ class JsonCollector implements Collector {
             dstField.set(dstObject, obj);
         }
     }
+
+    private static final JsonCollector sInstance = new JsonCollector();
+
+    static JsonCollector getInstance() {
+        return sInstance;
+    }
 }

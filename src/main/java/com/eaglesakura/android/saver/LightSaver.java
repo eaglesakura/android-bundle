@@ -23,11 +23,6 @@ public class LightSaver {
 
     private final Map<Class, Collector> mFreezers;
 
-    /**
-     * JSON Mapping
-     */
-    private final Collector mJsonCollector = new JsonCollector();
-
     private String mTag;
 
     private LightSaver(Object target, Bundle state, String keyTag, Map<Class, Collector> freezers) {
@@ -58,11 +53,23 @@ public class LightSaver {
         Class<?> type = field.getType();
 
         Collector result = mFreezers.get(type);
-        // JSONを利用するなら専用のCollectorを指定する
-        if (bundleState.json()) {
-            result = mJsonCollector;
+        // Collectorを変化させる
+        if (bundleState.collector() != Collector.class) {
+            try {
+                result = bundleState.collector().newInstance();
+            } catch (Exception e) {
+                throw new IllegalArgumentException("new " + bundleState.collector() + "() failed");
+            }
+        } else {
+            switch (bundleState.value()) {
+                case Json:
+                    result = JsonCollector.getInstance();
+                    break;
+                case InnerValues:
+                    result = InnerValueCollector.getInstance();
+                    break;
+            }
         }
-
         if (result == null) {
             if (instanceOf(type, Parcelable.class)) {
                 result = mFreezers.get(Parcelable.class);
