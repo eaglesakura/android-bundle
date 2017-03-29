@@ -3,7 +3,7 @@
  * 1.1.x    : support JSON
  * 1.2.x    : bintrayへ移行
  */
-def ARTIFACT_VERSION = "1.1"
+def ARTIFACT_VERSION = "1.2"
 def REPOSITORY_NAME = "maven"
 def BINTRAY_LICENSES = ["MIT"]
 def BINTRAY_LABELS = ["android"]
@@ -80,19 +80,19 @@ dependencies {
     if (EGLIBRARY_COMPILE_LOCAL) {
         compile project(':eglibrary:json-wrapper')
 
-        testCompile project(':eglibrary:simple-utils')
-        testCompile project(':eglibrary:android-simple-utils')
+        testCompile project(':eglibrary:java-commons')
+        testCompile project(':eglibrary:android-commons')
 
         androidTestCompile project(":eglibrary:android-devicetest-support")
         testCompile project(":eglibrary:android-unittest-support")
     } else {
         compile "com.eaglesakura:json-wrapper:1.1.423"
 
-        testCompile "com.eaglesakura:simple-utils:1.2.562"
-        testCompile "com.eaglesakura:android-simple-utils:2.0.548"
+        testCompile "com.eaglesakura:java-commons:2.0.2"
+        testCompile "com.eaglesakura:android-commons:2.1.3"
 
-        androidTestCompile "com.eaglesakura:android-devicetest-support:2.1.270"
-        testCompile "com.eaglesakura:android-unittest-support:1.4.206"
+        androidTestCompile "com.eaglesakura:android-devicetest-support:2.1.272"
+        testCompile "com.eaglesakura:android-unittest-support:1.4.207"
     }
 
     /**
