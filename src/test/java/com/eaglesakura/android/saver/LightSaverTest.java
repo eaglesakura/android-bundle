@@ -9,7 +9,6 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LightSaverTest extends UnitTestCase {
 
@@ -181,10 +180,10 @@ public class LightSaverTest extends UnitTestCase {
         ArrayList<Integer> mNullIntegerArrayList;
 
         @BundleState
-        List<Bundle> mParcelableArrayList = new ArrayList<>(Arrays.asList(new Bundle(), null, new Bundle()));
+        ArrayList<Bundle> mParcelableArrayList = new ArrayList<>(Arrays.asList(new Bundle(), null, new Bundle()));
 
         @BundleState
-        List<Bundle> mNullParcelableArrayList;
+        ArrayList<Bundle> mNullParcelableArrayList;
 
         @BundleState
         EnumValue mEnumValue = RandomUtil.randEnum(EnumValue.class);
