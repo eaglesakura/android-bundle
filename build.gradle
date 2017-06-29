@@ -73,7 +73,7 @@ dependencies {
 
         androidTestImplementation project(":eglibrary:android-devicetest-support")
     } else {
-        compile "com.eaglesakura:json-wrapper:1.1.423"
+        compile "com.eaglesakura:json-wrapper:1.2.0"
 
         testImplementation "com.eaglesakura:java-commons:2.2.0"
         testImplementation "com.eaglesakura:android-commons:2.2.11"
