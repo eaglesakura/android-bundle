@@ -2,9 +2,11 @@ package com.eaglesakura.android.saver;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 配列系の値をsave/restoreする
@@ -14,7 +16,6 @@ class BundleArrayCollector implements Collector {
     public void onSaveInstance(Bundle state, String key, Object srcObject, Field srcField) throws Throwable {
         Object value = srcField.get(srcObject);
         Class<?> type = srcField.getType();
-
         if (boolean[].class.equals(type)) {
             state.putBooleanArray(key, (boolean[]) value);
         } else if (byte[].class.equals(type)) {
@@ -33,14 +34,26 @@ class BundleArrayCollector implements Collector {
             state.putStringArray(key, (String[]) value);
         } else if (Parcelable[].class.equals(type)) {
             state.putParcelableArray(key, (Parcelable[]) value);
-        } else if (ArrayList.class.equals(type)) {
+        } else if (List.class.equals(type) || ArrayList.class.equals(type)) {
             Class genericClass = LightSaver.getListGenericClass(srcField);
+            List putList = (List) value;
+
+            if (putList != null && !(putList instanceof ArrayList)) {
+                // ArrayList以外は詰め込み直す
+                List tempList = new ArrayList(putList.size());
+                for (Object temp : putList) {
+                    tempList.add(temp);
+                }
+
+                putList = tempList;
+            }
+
             if (String.class.equals(genericClass)) {
-                state.putStringArrayList(key, (ArrayList<String>) value);
+                state.putStringArrayList(key, (ArrayList<String>) putList);
             } else if (Integer.class.equals(genericClass)) {
-                state.putIntegerArrayList(key, (ArrayList<Integer>) value);
-            } else if (Parcelable.class.equals(genericClass)) {
-                state.putParcelableArrayList(key, (ArrayList<Parcelable>) value);
+                state.putIntegerArrayList(key, (ArrayList<Integer>) putList);
+            } else if (LightSaver.asSubClass(genericClass, Parcelable.class)) {
+                state.putParcelableArrayList(key, (ArrayList<? extends Parcelable>) putList);
             } else {
                 throw new IllegalStateException("key:" + key);
             }
@@ -72,13 +85,13 @@ class BundleArrayCollector implements Collector {
             value = state.getStringArray(key);
         } else if (Parcelable[].class.equals(type)) {
             value = state.getParcelableArray(key);
-        } else if (ArrayList.class.equals(type)) {
+        } else if (List.class.equals(type) || ArrayList.class.equals(type)) {
             Class genericClass = LightSaver.getListGenericClass(dstField);
             if (String.class.equals(genericClass)) {
                 value = state.getStringArrayList(key);
             } else if (Integer.class.equals(genericClass)) {
                 value = state.getIntegerArrayList(key);
-            } else if (Parcelable.class.equals(genericClass)) {
+            } else if (LightSaver.asSubClass(genericClass, Parcelable.class)) {
                 value = state.getParcelableArrayList(key);
             } else {
                 throw new IllegalStateException("key:" + key);

@@ -30,9 +30,9 @@ class BundlePrimitiveCollector implements Collector {
             state.putDouble(key, srcField.getDouble(srcObject));
         } else if (String.class.equals(type)) {
             state.putString(key, (String) srcField.get(srcObject));
-        } else if (LightSaver.instanceOf(type, Parcelable.class)) {
+        } else if (LightSaver.asSubClass(type, Parcelable.class)) {
             state.putParcelable(key, (Parcelable) srcField.get(srcObject));
-        } else if (LightSaver.instanceOf(type, Serializable.class)) {
+        } else if (LightSaver.asSubClass(type, Serializable.class)) {
             state.putSerializable(key, (Serializable) srcField.get(srcObject));
         } else {
             throw new IllegalArgumentException("key : " + key);
@@ -59,9 +59,9 @@ class BundlePrimitiveCollector implements Collector {
             dstField.setDouble(dstObject, state.getDouble(key, dstField.getDouble(dstObject)));
         } else if (String.class.equals(type)) {
             dstField.set(dstObject, state.getString(key, (String) dstField.get(dstObject)));
-        } else if (LightSaver.instanceOf(type, Parcelable.class)) {
+        } else if (LightSaver.asSubClass(type, Parcelable.class)) {
             dstField.set(dstObject, state.getParcelable(key));
-        } else if (LightSaver.instanceOf(type, Serializable.class)) {
+        } else if (LightSaver.asSubClass(type, Serializable.class)) {
             dstField.set(dstObject, state.getSerializable(key));
         } else {
             throw new IllegalArgumentException("key : " + key);

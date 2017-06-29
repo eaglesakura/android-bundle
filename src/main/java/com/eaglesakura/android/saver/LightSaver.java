@@ -3,6 +3,7 @@ package com.eaglesakura.android.saver;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.io.Serializable;
@@ -52,7 +53,7 @@ public class LightSaver {
         BundleState bundleState = field.getAnnotation(BundleState.class);
         Class<?> type = field.getType();
 
-        Collector result = mFreezers.get(type);
+        Collector result = null;
         // Collectorを変化させる
         if (bundleState.collector() != Collector.class) {
             try {
@@ -71,10 +72,25 @@ public class LightSaver {
             }
         }
         if (result == null) {
-            if (instanceOf(type, Parcelable.class)) {
+            if (asSubClass(type, Parcelable.class)) {
                 result = mFreezers.get(Parcelable.class);
-            } else if (instanceOf(type, Serializable.class)) {
+            } else if (asSubClass(type, Serializable.class)) {
                 result = mFreezers.get(Serializable.class);
+            } else {
+                // キャッシュから取得
+                result = mFreezers.get(type);
+            }
+        }
+
+        if (result == null) {
+            // Fieldの値から型を取得
+            try {
+                field.setAccessible(true);
+                Object o = field.get(mTarget);
+                if (o != null) {
+                    result = mFreezers.get(o.getClass());
+                }
+            } catch (Exception e) {
             }
         }
 
@@ -164,6 +180,7 @@ public class LightSaver {
                         sDefaultFreezer.put(String[].class, arrayFreezer);
                         sDefaultFreezer.put(Parcelable[].class, arrayFreezer);
                         sDefaultFreezer.put(ArrayList.class, arrayFreezer);
+                        sDefaultFreezer.put(List.class, arrayFreezer);
                     }
                 }
             }
@@ -281,7 +298,10 @@ public class LightSaver {
         }
     }
 
-    static boolean instanceOf(Class checkType, Class clazz) {
+    static boolean asSubClass(Class checkType, Class clazz) {
+        if (checkType == null || clazz == null) {
+            return false;
+        }
         try {
             return checkType.asSubclass(clazz) != null;
         } catch (Exception e) {
