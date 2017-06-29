@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 
 /**
  * Bundleへのステート保存を行う変数へ設定する
+ *
+ * 標準CollectorはFieldの型に対してチェックが行われるため、例えば `List` ではなく `ArrayList` を正確に使う必要がある。
  */
 @Keep
 @Retention(RetentionPolicy.RUNTIME)

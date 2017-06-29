@@ -5,9 +5,11 @@ import com.eaglesakura.util.RandomUtil;
 import org.junit.Test;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class LightSaverTest extends UnitTestCase {
 
@@ -173,10 +175,16 @@ public class LightSaverTest extends UnitTestCase {
         ArrayList<String> mNullStringArrayList;
 
         @BundleState
-        ArrayList<Integer> mIntegerArrayList = new ArrayList<>(Arrays.asList(RandomUtil.randInt32(), RandomUtil.randInt32(), RandomUtil.randInt32(), RandomUtil.randInt32()));
+        ArrayList<Integer> mIntegerArrayList = new ArrayList<>(Arrays.asList(RandomUtil.randInt32(), null, RandomUtil.randInt32(), RandomUtil.randInt32()));
 
         @BundleState
         ArrayList<Integer> mNullIntegerArrayList;
+
+        @BundleState
+        List<Bundle> mParcelableArrayList = new ArrayList<>(Arrays.asList(new Bundle(), null, new Bundle()));
+
+        @BundleState
+        List<Bundle> mNullParcelableArrayList;
 
         @BundleState
         EnumValue mEnumValue = RandomUtil.randEnum(EnumValue.class);
@@ -241,6 +249,10 @@ public class LightSaverTest extends UnitTestCase {
                 return false;
             if (mNullIntegerArrayList != null ? !mNullIntegerArrayList.equals(that.mNullIntegerArrayList) : that.mNullIntegerArrayList != null)
                 return false;
+            if (mParcelableArrayList != null ? !mParcelableArrayList.equals(that.mParcelableArrayList) : that.mParcelableArrayList != null)
+                return false;
+            if (mNullParcelableArrayList != null ? !mNullParcelableArrayList.equals(that.mNullParcelableArrayList) : that.mNullParcelableArrayList != null)
+                return false;
             if (mEnumValue != that.mEnumValue) return false;
             if (mNullEnumValue != that.mNullEnumValue) return false;
             if (mPojo != null ? !mPojo.equals(that.mPojo) : that.mPojo != null) return false;
@@ -286,6 +298,8 @@ public class LightSaverTest extends UnitTestCase {
             result = 31 * result + (mNullStringArrayList != null ? mNullStringArrayList.hashCode() : 0);
             result = 31 * result + (mIntegerArrayList != null ? mIntegerArrayList.hashCode() : 0);
             result = 31 * result + (mNullIntegerArrayList != null ? mNullIntegerArrayList.hashCode() : 0);
+            result = 31 * result + (mParcelableArrayList != null ? mParcelableArrayList.hashCode() : 0);
+            result = 31 * result + (mNullParcelableArrayList != null ? mNullParcelableArrayList.hashCode() : 0);
             result = 31 * result + (mEnumValue != null ? mEnumValue.hashCode() : 0);
             result = 31 * result + (mNullEnumValue != null ? mNullEnumValue.hashCode() : 0);
             result = 31 * result + (mPojo != null ? mPojo.hashCode() : 0);

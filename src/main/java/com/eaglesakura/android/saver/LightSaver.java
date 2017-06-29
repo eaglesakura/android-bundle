@@ -71,9 +71,9 @@ public class LightSaver {
             }
         }
         if (result == null) {
-            if (instanceOf(type, Parcelable.class)) {
+            if (asSubClass(type, Parcelable.class)) {
                 result = mFreezers.get(Parcelable.class);
-            } else if (instanceOf(type, Serializable.class)) {
+            } else if (asSubClass(type, Serializable.class)) {
                 result = mFreezers.get(Serializable.class);
             }
         }
@@ -281,7 +281,7 @@ public class LightSaver {
         }
     }
 
-    static boolean instanceOf(Class checkType, Class clazz) {
+    static boolean asSubClass(Class checkType, Class clazz) {
         try {
             return checkType.asSubclass(clazz) != null;
         } catch (Exception e) {

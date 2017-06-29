@@ -39,7 +39,7 @@ class BundleArrayCollector implements Collector {
                 state.putStringArrayList(key, (ArrayList<String>) value);
             } else if (Integer.class.equals(genericClass)) {
                 state.putIntegerArrayList(key, (ArrayList<Integer>) value);
-            } else if (Parcelable.class.equals(genericClass)) {
+            } else if (LightSaver.asSubClass(genericClass, Parcelable.class)) {
                 state.putParcelableArrayList(key, (ArrayList<Parcelable>) value);
             } else {
                 throw new IllegalStateException("key:" + key);
@@ -78,7 +78,7 @@ class BundleArrayCollector implements Collector {
                 value = state.getStringArrayList(key);
             } else if (Integer.class.equals(genericClass)) {
                 value = state.getIntegerArrayList(key);
-            } else if (Parcelable.class.equals(genericClass)) {
+            } else if (LightSaver.asSubClass(genericClass, Parcelable.class)) {
                 value = state.getParcelableArrayList(key);
             } else {
                 throw new IllegalStateException("key:" + key);
