@@ -58,29 +58,14 @@ android {
     }
 }
 
-// Local or maven
-if (!hasProperty("EGLIBRARY_COMPILE_LOCAL")) {
-    ext.EGLIBRARY_COMPILE_LOCAL = false
-}
-
 dependencies {
-    if (EGLIBRARY_COMPILE_LOCAL) {
-        implementation project(':eglibrary:json-wrapper')
+    compile "com.eaglesakura:json-wrapper:1.2.0"
 
-        testImplementation project(':eglibrary:java-commons')
-        testImplementation project(':eglibrary:android-commons')
-        testImplementation project(":eglibrary:android-unittest-support")
+    testImplementation "com.eaglesakura:java-commons:2.2.0"
+    testImplementation "com.eaglesakura:android-commons:2.2.11"
+    testImplementation "com.eaglesakura:android-unittest-support:1.5.211"
 
-        androidTestImplementation project(":eglibrary:android-devicetest-support")
-    } else {
-        compile "com.eaglesakura:json-wrapper:1.2.0"
-
-        testImplementation "com.eaglesakura:java-commons:2.2.0"
-        testImplementation "com.eaglesakura:android-commons:2.2.11"
-        testImplementation "com.eaglesakura:android-unittest-support:1.5.211"
-
-        androidTestImplementation "com.eaglesakura:android-devicetest-support:2.2.275"
-    }
+    androidTestImplementation "com.eaglesakura:android-devicetest-support:2.2.275"
 
     /**
      * support libs
