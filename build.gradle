@@ -20,7 +20,7 @@ buildscript {
         maven { url "https://maven.google.com" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha4'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
@@ -37,8 +37,8 @@ group = "com.eaglesakura"
 version = ARTIFACT_VERSION + getArtifactVersionSuffix()
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -47,7 +47,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         consumerProguardFiles 'proguard-rules.pro'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -61,11 +61,11 @@ android {
 dependencies {
     compile "com.eaglesakura:json-wrapper:1.2.0"
 
-    testImplementation "com.eaglesakura:java-commons:2.2.0"
-    testImplementation "com.eaglesakura:android-commons:2.2.11"
-    testImplementation "com.eaglesakura:android-unittest-support:1.5.211"
+    testImplementation "com.eaglesakura:java-commons:2.2.1"
+    testImplementation "com.eaglesakura:android-commons:2.3.4"
+    testImplementation "com.eaglesakura:android-unittest-support:1.6.0"
 
-    androidTestImplementation "com.eaglesakura:android-devicetest-support:2.2.275"
+    androidTestImplementation "com.eaglesakura:android-devicetest-support:2.3.1"
 
     /**
      * support libs
